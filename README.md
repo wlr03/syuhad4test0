@@ -1,18 +1,20 @@
-# Aplikasi RAG Chatbot Metadata Masjid Syuhada Yogyakarta
+# Aplikasi RAG Chatbot Metadata Masjid Syuhada Yogyakarta (Fixed)
 
 Aplikasi web berbasis **Streamlit** dan **Retrieval-Augmented Generation (RAG)** untuk mempublikasikan metadata cagar budaya Masjid Syuhada Yogyakarta menggunakan standar **Dublin Core Metadata Initiative (DCMI)**.
 
 ## 📁 Struktur Project
 - `app.py`: Kode utama aplikasi Streamlit dan logika RAG (ChromaDB + Gemini).
 - `requirements.txt`: Daftar dependensi Python.
+- `README.md`: Panduan instalasi dan deployment.
 - `data/Dublin_Core_Metadata_Masjid_Syuhada.xlsx`: Dataset metadata Dublin Core.
 
 ## 🚀 Cara Menjalankan Secara Lokal
-1. Install dependensi:
+1. Ekstrak zip ini.
+2. Install dependensi:
    ```bash
    pip install -r requirements.txt
    ```
-2. Jalankan aplikasi:
+3. Jalankan aplikasi:
    ```bash
    streamlit run app.py
    ```

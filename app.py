@@ -117,10 +117,15 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang Masjid Syuhada... (contoh: 
     
     context_str = ""
     for i, (doc, meta) in enumerate(zip(retrieved_docs, retrieved_metadatas), start=1):
-        context_str += f"\n--- Dokumen {i} ---\n"
-        context_str += f"Judul: {meta.get('title')}\n"
-        context_str += f"Subjek/Topik: {meta.get('subject')}\n"
-        context_str += f"Isi: {doc}\n"
+        context_str += f"
+--- Dokumen {i} ---
+"
+        context_str += f"Judul: {meta.get('title')}
+"
+        context_str += f"Subjek/Topik: {meta.get('subject')}
+"
+        context_str += f"Isi: {doc}
+"
 
     system_instruction = """
     Anda adalah Asisten Pakar Publikasi Cagar Budaya Masjid Syuhada Yogyakarta.
