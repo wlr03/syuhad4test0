@@ -146,7 +146,7 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang Masjid Syuhada... (contoh: 
         with st.spinner("Mencari metadata & menyusun jawaban..."):
             try:
                 response = client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='gemini-3.8-flash',
                     contents=user_prompt,
                     config={'system_instruction': system_instruction}
                 )
