@@ -65,13 +65,17 @@ def init_vector_db():
     ids = []
     
     for idx, row in df.iterrows():
-        full_text = f"Judul: {row.get('dc:title', '')}. Deskripsi: {row.get('dc:description', '')} Chunk: {row.get('chunk_text_rag', '')}"
+        title_val = str(row.get('dc:title', ''))
+        desc_val = str(row.get('dc:description', ''))
+        chunk_val = str(row.get('chunk_text_rag', ''))
+        
+        full_text = "Judul: " + title_val + ". Deskripsi: " + desc_val + " Chunk: " + chunk_val
         
         documents.append(full_text)
         ids.append(str(row.get('dc:identifier', f"ID-{idx}")))
         
         metadata_item = {
-            "title": str(row.get('dc:title', '')),
+            "title": title_val,
             "creator": str(row.get('dc:creator', '')),
             "subject": str(row.get('dc:subject', '')),
             "date": str(row.get('dc:date', '')),
@@ -117,35 +121,26 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang Masjid Syuhada... (contoh: 
     
     context_str = ""
     for i, (doc, meta) in enumerate(zip(retrieved_docs, retrieved_metadatas), start=1):
-        context_str += f"
---- Dokumen {i} ---
-"
-        context_str += f"Judul: {meta.get('title')}
-"
-        context_str += f"Subjek/Topik: {meta.get('subject')}
-"
-        context_str += f"Isi: {doc}
-"
+        context_str += "\n--- Dokumen " + str(i) + " ---\n"
+        context_str += "Judul: " + str(meta.get('title')) + "\n"
+        context_str += "Subjek/Topik: " + str(meta.get('subject')) + "\n"
+        context_str += "Isi: " + str(doc) + "\n"
 
-    system_instruction = """
-    Anda adalah Asisten Pakar Publikasi Cagar Budaya Masjid Syuhada Yogyakarta.
-    Tugas Anda adalah menjawab pertanyaan pengunjung secara ramah, akurat, dan informatif berdasarkan konteks metadata Dublin Core yang diberikan.
+    system_instruction = (
+        "Anda adalah Asisten Pakar Publikasi Cagar Budaya Masjid Syuhada Yogyakarta. "
+        "Tugas Anda adalah menjawab pertanyaan pengunjung secara ramah, akurat, dan informatif "
+        "berdasarkan konteks metadata Dublin Core yang diberikan.\n\n"
+        "Aturan:\n"
+        "1. Jawab pertanyaan HANYA berdasarkan konteks relevan yang diberikan di bawah.\n"
+        "2. Jika informasi tidak ditemukan dalam konteks, katakan secara sopan bahwa data tersebut belum tersedia pada basis data metadata.\n"
+        "3. Cantumkan simbolisme atau fakta sejarah jika relevan dengan pertanyaan."
+    )
     
-    Aturan:
-    1. Jawab pertanyaan HANYA berdasarkan konteks relevan yang diberikan di bawah.
-    2. Jika informasi tidak ditemukan dalam konteks, katakan secara sopan bahwa data tersebut belum tersedia pada basis data metadata.
-    3. Cantumkan simbolisme atau fakta sejarah jika relevan dengan pertanyaan.
-    """
-    
-    user_prompt = f"""
-    KONTEKS METADATA MASJID SYUHADA:
-    {context_str}
-    
-    PERTANYAAN PENGUNJUNG:
-    {prompt}
-    
-    JAWABAN:
-    """
+    user_prompt = (
+        "KONTEKS METADATA MASJID SYUHADA:\n" + context_str + "\n\n"
+        "PERTANYAAN PENGUNJUNG:\n" + prompt + "\n\n"
+        "JAWABAN:"
+    )
     
     with st.chat_message("assistant"):
         with st.spinner("Mencari metadata & menyusun jawaban..."):
@@ -160,9 +155,9 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang Masjid Syuhada... (contoh: 
                 
                 with st.expander("🔍 Sumber Rujukan Context RAG (Dublin Core)"):
                     for meta in retrieved_metadatas:
-                        st.write(f"- **{meta.get('title')}** | *Subjek:* {meta.get('subject')}")
+                        st.write("- **" + str(meta.get('title')) + "** | *Subjek:* " + str(meta.get('subject')))
                         
                 st.session_state.messages.append({"role": "assistant", "content": answer})
                 
             except Exception as e:
-                st.error(f"Gagal menghasilkan response: {str(e)}")
+                st.error("Gagal menghasilkan response: " + str(e))
